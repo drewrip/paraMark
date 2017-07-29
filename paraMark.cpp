@@ -3,10 +3,13 @@
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
+#include <cmath>
 
-int prime(){
+#define mark 500000
+
+int prime(int start_num, int end_num){
 	int primeStart = time(NULL);
-	for(int i = 1; i < 500000; i++){
+	for(int i = start_num; i < end_num; i++){
 		bool foundPrime = true;
 		for(int n = 2; n < i; n++){
 			if(i % n == 0){
@@ -32,6 +35,8 @@ int main(){
 
 	if(worldRank == 0){
 		int mainStart = time(NULL);
+		
+		//Master node listens for the other nodes to finish
 		while(finishedCount < worldSize){
 			MPI_Recv(&finishedSign, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			if(finishedSign == 1){
@@ -41,7 +46,12 @@ int main(){
 		std::cout << "Finished in " << time(NULL) - mainStart << "s" << std::endl; 
 	}
 	else{
-		prime();
+		//Designates the portion the node needs to do and start that work
+		int rangeStart = std::round(worldRank-1*(mark/worldSize-1));
+		int rangeEnd = std::round(worldRank*(mark/worldSize-1));
+		prime(rangeStart, rangeEnd);
+
+		//Signals the master node that the compute node has finished 
 		finishedSign = 1;
 		MPI_Send(&finishedSign, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 	}
