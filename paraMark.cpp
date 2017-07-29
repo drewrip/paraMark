@@ -47,10 +47,8 @@ int main(){
 	}
 	else{
 		//Designates the portion the node needs to do and start that work
-		float tempStart = (worldRank-1)*(mark/(worldSize-1));
-		float tempEnd = worldRank*(mark/(worldSize-1));
-		int rangeStart = round(tempStart);
-		int rangeEnd = round(tempEnd);
+		int rangeStart = round(((float)(worldRank-1)*(mark/(worldSize-1))));
+		int rangeEnd = round(((float)worldRank*(mark/(worldSize-1))));
 		prime(rangeStart, rangeEnd);
 		std::cout << "node" << worldRank-1 << ": DONE" << "  " << rangeStart << "-" << rangeEnd << std::endl;
 
