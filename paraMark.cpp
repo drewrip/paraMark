@@ -47,11 +47,10 @@ int main(){
 	}
 	else{
 		//Designates the portion the node needs to do and start that work
-		int rangeStart = round(worldRank-1*(mark/worldSize-1));
+		int rangeStart = round((worldRank-1)*(mark/worldSize-1));
 		int rangeEnd = round(worldRank*(mark/worldSize-1));
-		std::cout << "node" << worldRank << ": finding primes " << rangeStart << "-" << rangeEnd << std::endl;
 		prime(rangeStart, rangeEnd);
-		std::cout << "node" << worldRank << ": DONE" << std::endl;
+		std::cout << "node" << worldRank << ": DONE" << "  " << rangeStart << "-" << rangeEnd << std::endl;
 
 		//Signals the master node that the compute node has finished 
 		finishedSign = 1;
